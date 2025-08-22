@@ -1,7 +1,7 @@
 const express = require("express");
 const verifyToken = require("../middleware/verify-token.js");
 const router = express.Router();
-const List = require("../models/List.js");
+const List = require("../models/list.js");
 
 router.use(verifyToken, (req, res, next) => {
   //middleware
@@ -60,7 +60,8 @@ router
       }
       const list = await List.findOne({
         _id: id,
-        $or: [//we allow to find by id for author and one of persons sharedWith
+        $or: [
+          //we allow to find by id for author and one of persons sharedWith
           { author: req.user._id },
           { sharedWith: req.user._id }, // works even though it's an array
         ],
