@@ -18,6 +18,7 @@ const listSchema = new mongoose.Schema(
         },
         quantity: {
           type: Number,
+          min: 0,
         },
       },
     ],
