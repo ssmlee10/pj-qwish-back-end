@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
 
 const itemSchema = mongoose.Schema({
-  name: {type: String, required: true},
+  name: { type: String, required: true },
   img: String,
   description: String,
-  price: {type: Number, required: true},
-  weight: {type: Number, min: 0, required: true},
-  quantity: {type: Number, min: 0, max: 100},
+  price: { type: Number, required: true },
+  weight: { type: Number, min: 0 },
+  quantity: { type: Number, min: 0 },
 });
 
 const Item = mongoose.model('Item', itemSchema);
