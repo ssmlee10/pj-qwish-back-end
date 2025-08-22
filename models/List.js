@@ -7,6 +7,7 @@ const listSchema = new mongoose.Schema(
       required: true,
     },
     author: {
+      required: true,
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
