@@ -10,20 +10,20 @@ const listSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    items: {
+    items: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: "Item",
-    },
+    }],
     description: {
       type: String,
     },
     closeDate: {
       type: Date,
     },
-    sharedWith: {
+    sharedWith: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-    },
+    }],
   },
   { timestamps: true }
 );
