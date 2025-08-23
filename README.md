@@ -1,3 +1,3 @@
 #Qwish
 
-[Front End](https://github.com/TrickyMoon01/pj-qwish-front-end)
+[Front End](https://github.com/red-dmacedo/pj-qwish-front-end)
