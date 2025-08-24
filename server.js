@@ -8,7 +8,7 @@ const logger = require('morgan');
 const testJwtRouter = require('./controllers/test-jwt');
 const authRouter = require('./controllers/auth');
 const usersRouter = require('./controllers/users.js');
-const listsRouter = require('./controllers/list.js');
+const listsRouter = require('./controllers/lists.js');
 
 mongoose.connect(process.env.MONGODB_URI);
 
