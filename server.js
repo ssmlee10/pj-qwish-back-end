@@ -9,6 +9,7 @@ const testJwtRouter = require('./controllers/test-jwt');
 const authRouter = require('./controllers/auth');
 const usersRouter = require('./controllers/users.js');
 const listsRouter = require('./controllers/lists.js');
+const itemsRouter = require('./controllers/items.js');
 
 mongoose.connect(process.env.MONGODB_URI);
 
@@ -25,6 +26,7 @@ app.use('/auth', authRouter);
 app.use('/test-jwt', testJwtRouter);
 app.use('/users', usersRouter);
 app.use('/lists', listsRouter);
+app.use('/items', itemsRouter);
 
 app.get('/',(req,res)=>{
   return res.send('Welcome on Qwish API backend')
