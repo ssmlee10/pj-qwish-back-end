@@ -3,7 +3,7 @@ const verifyToken = require("../middleware/verify-token.js");
 const router = express.Router();
 const List = require("../models/list.js");
 
-router.get("/", async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
     //only yours lists, without ones shared with you
     // const allLists = await List.find({ author: req.user._id });
