@@ -32,7 +32,7 @@ router.post("/", verifyToken, async (req, res) => {
 router.get("/shared", verifyToken, async (req, res) => {
   try {
     const sharedLists = await List.find({ sharedWith: req.user._id });
-    if(!sharedLists) return res.sendStatus(402);
+    if(!sharedLists) return res.sendStatus(404);
     return res.status(200).json(sharedLists);
   } catch (e) {
     console.error(e);
