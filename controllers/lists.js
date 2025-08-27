@@ -6,14 +6,15 @@ const List = require("../models/list.js");
 router.get("/", verifyToken, async (req, res) => {
   try {
     //only yours lists, without ones shared with you
-    // const allLists = await List.find({ author: req.user._id });
-    const allLists = await List.find();
+    const allLists = await List.find({ author: req.user._id });
+    // const allLists = await List.find();
     return res.status(200).json(allLists);
   } catch (e) {
     console.error(e);
     return res.sendStatus(500);
   }
 });
+
 router.post("/", verifyToken, async (req, res) => {
   try {
     req.body.author = req.user._id;
@@ -27,6 +28,18 @@ router.post("/", verifyToken, async (req, res) => {
     return res.sendStatus(500);
   }
 });
+
+router.get("/shared", verifyToken, async (req, res) => {
+  try {
+    const sharedLists = await List.find({ sharedWith: req.user._id });
+    if(!sharedLists) return res.sendStatus(402);
+    return res.status(200).json(sharedLists);
+  } catch (e) {
+    console.error(e);
+    return res.sendStatus(500);
+  };
+});
+
 router.get("/:listId", verifyToken, async (req, res) => {
   try {
     const { listId } = req.params;
@@ -50,6 +63,7 @@ router.get("/:listId", verifyToken, async (req, res) => {
     return res.sendStatus(500);
   }
 });
+
 router.put("/:listId", verifyToken, async (req, res) => {
   try {
     const { listId } = req.params;
