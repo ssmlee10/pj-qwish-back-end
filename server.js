@@ -17,6 +17,8 @@ mongoose.connection.on('connected', () => {
   console.log(`Connected to MongoDB ${mongoose.connection.name}.`);
 });
 
+const PORT = process.env.PORT ? process.env.PORT : 3000;
+
 app.use(cors());
 app.use(express.json());
 app.use(logger('dev'));
@@ -32,6 +34,6 @@ app.get('/',(req,res)=>{
   return res.send('Welcome on Qwish API backend')
 })
 
-app.listen(3000, () => {
+app.listen(PORT, () => {
   console.log('The express app is ready!');
 });
