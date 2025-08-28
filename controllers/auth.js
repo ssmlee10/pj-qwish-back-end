@@ -9,18 +9,19 @@ const saltRounds = 12;
 router.post('/sign-up', async (req, res) => {
   try {
     const userInDatabase = await User.findOne({ username: req.body.username });
-    
+
     if (userInDatabase) {
-      return res.status(409).json({err: 'Username already taken.'});
-    }
-    
-    const user = await User.create({
-      username: req.body.username,
-      hashedPassword: bcrypt.hashSync(req.body.password, saltRounds)
-    });
+      return res.status(409).json({ err: 'Username already taken.' });
+    };
+
+    req.body.hashedPassword = bcrypt.hashSync(req.body.password, saltRounds);
+
+    const user = await User.create(req.body);
+
+    const { hashedPassword, ...modifiedUser } = user; // remove hashedPassword from user object
 
     // Construct the payload
-    const payload = { username: user.username, _id: user._id };
+    const payload = modifiedUser;
 
     // Create the token, attaching the payload
     const token = jwt.sign({ payload }, process.env.JWT_SECRET);
@@ -46,14 +47,8 @@ router.post('/sign-in', async (req, res) => {
       return res.status(401).json({ err: 'Invalid credentials.' });
     }
 
-<<<<<<< Updated upstream
-    // Construct the payload
-    const payload = { username: user.username, _id: user._id };
-=======
-    // const { hashedPassword, ...modifiedUser } = user; // remove hashedPassword from user object
     // // Construct the payload
     const payload = user;
->>>>>>> Stashed changes
 
     // Create the token, attaching the payload
     const token = jwt.sign({ payload }, process.env.JWT_SECRET);
