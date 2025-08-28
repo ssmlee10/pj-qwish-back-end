@@ -1,3 +1,3 @@
-#Qwish
+# Qwish, the wishlist maker app
 
-[Front End](https://github.com/red-dmacedo/pj-qwish-front-end)
+[Github Repo](https://github.com/red-dmacedo/pj-qwish-front-end)
