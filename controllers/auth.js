@@ -12,12 +12,11 @@ router.post('/sign-up', async (req, res) => {
     
     if (userInDatabase) {
       return res.status(409).json({err: 'Username already taken.'});
-    }
+    };
+
+    req.body.hashedPassword = bcrypt.hashSync(req.body.password, saltRounds);
     
-    const user = await User.create({
-      username: req.body.username,
-      hashedPassword: bcrypt.hashSync(req.body.password, saltRounds)
-    });
+    const user = await User.create(req.body);
 
     // Construct the payload
     const payload = { username: user.username, _id: user._id };
