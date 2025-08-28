@@ -15,11 +15,11 @@ router.get("/", verifyToken, async (req, res) => {
   }
 });
 router.post("/", verifyToken, async (req, res) => {
+  console.log(req.user);
   try {
     req.body.author = req.user._id;
-    if (!req.body.name) {
-      return res.sendStatus(423);
-    }
+    console.log("req.body in POST /lists:", req.body);
+
     const newList = await List.create(req.body);
     return res.status(201).json(newList);
   } catch (e) {
