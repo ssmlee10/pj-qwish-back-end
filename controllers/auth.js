@@ -15,13 +15,10 @@ router.post('/sign-up', async (req, res) => {
     };
 
     req.body.hashedPassword = bcrypt.hashSync(req.body.password, saltRounds);
-
     const user = await User.create(req.body);
 
-    const { hashedPassword, ...modifiedUser } = user; // remove hashedPassword from user object
-
     // Construct the payload
-    const payload = modifiedUser;
+    const payload = user;
 
     // Create the token, attaching the payload
     const token = jwt.sign({ payload }, process.env.JWT_SECRET);
