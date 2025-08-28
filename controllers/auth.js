@@ -45,15 +45,9 @@ router.post('/sign-in', async (req, res) => {
     if (!isPasswordCorrect) {
       return res.status(401).json({ err: 'Invalid credentials.' });
     }
-
-<<<<<<< Updated upstream
+    
     // Construct the payload
-    const payload = { username: user.username, _id: user._id };
-=======
-    // const { hashedPassword, ...modifiedUser } = user; // remove hashedPassword from user object
-    // // Construct the payload
     const payload = user;
->>>>>>> Stashed changes
 
     // Create the token, attaching the payload
     const token = jwt.sign({ payload }, process.env.JWT_SECRET);
