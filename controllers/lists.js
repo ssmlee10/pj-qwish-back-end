@@ -115,4 +115,17 @@ router.delete("/:listId", verifyToken, async (req, res) => {
   }
 });
 
+router.post("/:listId/newItem", verifyToken, async (req, res) => {
+  try {
+    const list = await List.findById(req.params.listId)
+    if (!list) {
+      return res.sendStatus(404);
+    } 
+    list.items = [...list.items, {_id}]
+  } catch (e) {
+    console.error(e);
+    return res.sendStatus(500);
+  }
+})
+
 module.exports = router;
