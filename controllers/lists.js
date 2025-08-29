@@ -125,7 +125,8 @@ router.delete("/:listId/:itemId", verifyToken, async (req, res) => {
       throw new Error('Failed to remove item');
     };
 
-    return res.status(200).json(list);
+    const item = await Item.findById(req.params.itemId);
+    return res.status(200).json(item);
   } catch (e) {
     console.error(e);
     return res.sendStatus(500);

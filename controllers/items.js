@@ -5,6 +5,11 @@ const router = express.Router();
 router.post('/', async (req, res) => {
   try {
     console.log(req.body);
+    const exists = await Item.find({ product_id: req.body.product_id });
+    if(exists){
+      return res.status(409).json({err: "Item already exists"});
+    };
+
     const createdItem = await Item.create(req.body);
     res.status(201).json(createdItem);
   } catch (err) {
