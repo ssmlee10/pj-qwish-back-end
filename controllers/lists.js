@@ -121,7 +121,7 @@ router.delete("/:listId/:itemId", verifyToken, async (req, res) => {
       $pull: { items: { _id: req.params.itemId, }, },
     }, { new: true });
     if (!list) return res.sendStatus(404);
-    if(list.items.find(el => el._id.toString() === req.params.itemId)){
+    if (list.items.find(el => el._id.toString() === req.params.itemId)) {
       throw new Error('Failed to remove item');
     };
 
