@@ -18,7 +18,7 @@ router.get("/", verifyToken, async (req, res) => {
 router.post("/", verifyToken, async (req, res) => {
   try {
     req.body.author = req.user._id;
-    console.log("req.body in POST /lists:", req.body);
+    // console.log("req.body in POST /lists:", req.body);
 
     const newList = await List.create(req.body);
     return res.status(201).json(newList);
@@ -108,6 +108,24 @@ router.delete("/:listId", verifyToken, async (req, res) => {
     }
     await List.findByIdAndDelete(listId);
     return res.status(200).json(list);
+  } catch (e) {
+    console.error(e);
+    return res.sendStatus(500);
+  }
+});
+
+router.post("/:listId/newItem", verifyToken, async (req, res) => {
+  try {
+    const list = await List.findById(req.params.listId);
+
+    if (!list) {
+      return res.sendStatus(404);
+    }
+
+    list.items.push(req.body);
+    await list.save();
+
+    return res.status(201).json(list);
   } catch (e) {
     console.error(e);
     return res.sendStatus(500);
