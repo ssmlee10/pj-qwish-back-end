@@ -32,7 +32,7 @@ router.post("/", verifyToken, async (req, res) => {
 router.get("/shared", verifyToken, async (req, res) => {
   try {
     const sharedLists = await List.find({ sharedWith: req.user._id });
-    if(!sharedLists) return res.sendStatus(404);
+    if (!sharedLists) return res.sendStatus(404);
     return res.status(200).json(sharedLists);
   } catch (e) {
     console.error(e);
@@ -108,6 +108,23 @@ router.delete("/:listId", verifyToken, async (req, res) => {
       return res.sendStatus(404);
     }
     await List.findByIdAndDelete(listId);
+    return res.status(200).json(list);
+  } catch (e) {
+    console.error(e);
+    return res.sendStatus(500);
+  }
+});
+
+router.delete("/:listId/:itemId", verifyToken, async (req, res) => {
+  try {
+    const list = await List.findByIdAndUpdate(req.params.listId, {
+      $pull: { items: { _id: req.params.itemId, }, },
+    }, { new: true });
+    if (!list) return res.sendStatus(404);
+    if(list.items.find(el => el._id.toString() === req.params.itemId)){
+      throw new Error('Failed to remove item');
+    };
+
     return res.status(200).json(list);
   } catch (e) {
     console.error(e);
