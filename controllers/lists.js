@@ -16,7 +16,6 @@ router.get("/", verifyToken, async (req, res) => {
 });
 
 router.post("/", verifyToken, async (req, res) => {
-  // console.log(req.user);
   try {
     req.body.author = req.user._id;
     // console.log("req.body in POST /lists:", req.body);

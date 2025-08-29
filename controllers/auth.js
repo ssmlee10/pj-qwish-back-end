@@ -9,7 +9,7 @@ const saltRounds = 12;
 router.post('/sign-up', async (req, res) => {
   try {
     const userInDatabase = await User.findOne({ username: req.body.username });
-
+    
     if (userInDatabase) {
       return res.status(409).json({ err: 'Username already taken.' });
     };
@@ -43,8 +43,8 @@ router.post('/sign-in', async (req, res) => {
     if (!isPasswordCorrect) {
       return res.status(401).json({ err: 'Invalid credentials.' });
     }
-
-    // // Construct the payload
+    
+    // Construct the payload
     const payload = user;
 
     // Create the token, attaching the payload
