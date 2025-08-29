@@ -16,10 +16,10 @@ router.get("/", verifyToken, async (req, res) => {
 });
 
 router.post("/", verifyToken, async (req, res) => {
-  console.log(req.user);
+  // console.log(req.user);
   try {
     req.body.author = req.user._id;
-    console.log("req.body in POST /lists:", req.body);
+    // console.log("req.body in POST /lists:", req.body);
 
     const newList = await List.create(req.body);
     return res.status(201).json(newList);

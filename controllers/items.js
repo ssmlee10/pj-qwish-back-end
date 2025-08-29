@@ -4,6 +4,7 @@ const router = express.Router();
 
 router.post('/', async (req, res) => {
   try {
+    console.log(req.body);
     const createdItem = await Item.create(req.body);
     res.status(201).json(createdItem);
   } catch (err) {
