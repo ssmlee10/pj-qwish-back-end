@@ -9,7 +9,7 @@ router.post('/', async (req, res) => {
     res.status(201).json(createdItem);
   } catch (err) {
     res.status(500).json({ err: err.message });
-  }
+  };
 });
 
 router.get('/', async (req, res) => {
@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
     res.status(200).json(foundItems);
   } catch (err) {
     res.status(500).json({ err: err.message });
-  }
+  };
 });
 
 router.get('/:itemId', async (req, res) => {
@@ -34,23 +34,23 @@ router.get('/:itemId', async (req, res) => {
       res.json({ err: err.message });
     } else {
       res.status(500).json({ err: err.message });
-    }
-  }
+    };
+  };
 });
 
 router.delete('/:itemId', async (req, res) => {
-    try {
-        const itemId = req.params.id;
-        const deletedItem = await Item.findByIdAndDelete(req.params.itemId);
+  try {
+    const itemId = req.params.id;
+    const deletedItem = await Item.findByIdAndDelete(req.params.itemId);
 
-        if (!deletedItem) {
-            return res.status(404).json({ error: 'Item not found' });
-        }
-        res.status(200).json(deletedItem);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'An error occured while deleting the item' });
+    if (!deletedItem) {
+      return res.status(404).json({ error: 'Item not found' });
     }
+    res.status(200).json(deletedItem);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'An error occured while deleting the item' });
+  };
 });
 
 router.put('/:itemId', async (req, res) => {
@@ -61,15 +61,24 @@ router.put('/:itemId', async (req, res) => {
     if (!updatedItem) {
       res.status(404);
       throw new Error('Item not found.');
-    }
+    };
     res.status(200).json(updatedItem);
   } catch (err) {
     if (res.statusCode === 404) {
       res.json({ err: err.message });
     } else {
       res.status(500).json({ err: err.message });
-    }
+    };
   }
+});
+
+router.post('/many', async (req, res) => {
+  try {
+    const foundItems = await Item.find({ _id: req.body.itemIds })
+    res.status(200).json(foundItems);
+  } catch (err) {
+    res.status(500).json({ err: err.message });
+  };
 });
 
 module.exports = router;
