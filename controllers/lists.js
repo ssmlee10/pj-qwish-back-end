@@ -117,15 +117,31 @@ router.delete("/:listId", verifyToken, async (req, res) => {
 
 router.post("/:listId/newItem", verifyToken, async (req, res) => {
   try {
-    const list = await List.findById(req.params.listId)
+    const { listId } = req.params;
+    const { product_id, name, img, description, price, quantity } = req.body;
+
+    const list = await List.findById(listId);
     if (!list) {
       return res.sendStatus(404);
-    } 
-    list.items = [...list.items, {_id}]
+    }
+
+    const newItem = {
+      product_id,
+      name,
+      img,
+      description,
+      price,
+      quantity,
+    };
+
+    list.items.push(newItem);
+    await list.save();
+
+    return res.status(201).json(newItem);
   } catch (e) {
     console.error(e);
     return res.sendStatus(500);
   }
-})
+});
 
 module.exports = router;
