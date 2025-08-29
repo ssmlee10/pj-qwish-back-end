@@ -11,16 +11,14 @@ router.post('/sign-up', async (req, res) => {
     const userInDatabase = await User.findOne({ username: req.body.username });
     
     if (userInDatabase) {
-      return res.status(409).json({err: 'Username already taken.'});
-    }
-    
-    const user = await User.create({
-      username: req.body.username,
-      hashedPassword: bcrypt.hashSync(req.body.password, saltRounds)
-    });
+      return res.status(409).json({ err: 'Username already taken.' });
+    };
+
+    req.body.hashedPassword = bcrypt.hashSync(req.body.password, saltRounds);
+    const user = await User.create(req.body);
 
     // Construct the payload
-    const payload = { username: user.username, _id: user._id };
+    const payload = user;
 
     // Create the token, attaching the payload
     const token = jwt.sign({ payload }, process.env.JWT_SECRET);
