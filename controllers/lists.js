@@ -16,10 +16,10 @@ router.get("/", verifyToken, async (req, res) => {
 });
 
 router.post("/", verifyToken, async (req, res) => {
-  console.log(req.user);
+  // console.log(req.user);
   try {
     req.body.author = req.user._id;
-    console.log("req.body in POST /lists:", req.body);
+    // console.log("req.body in POST /lists:", req.body);
 
     const newList = await List.create(req.body);
     return res.status(201).json(newList);
@@ -117,15 +117,31 @@ router.delete("/:listId", verifyToken, async (req, res) => {
 
 router.post("/:listId/newItem", verifyToken, async (req, res) => {
   try {
-    const list = await List.findById(req.params.listId)
+    const { listId } = req.params;
+    const { product_id, name, img, description, price, quantity } = req.body;
+
+    const list = await List.findById(listId);
     if (!list) {
       return res.sendStatus(404);
-    } 
-    list.items = [...list.items, {_id}]
+    }
+
+    const newItem = {
+      product_id,
+      name,
+      img,
+      description,
+      price,
+      quantity,
+    };
+
+    list.items.push(newItem);
+    await list.save();
+
+    return res.status(201).json(newItem);
   } catch (e) {
     console.error(e);
     return res.sendStatus(500);
   }
-})
+});
 
 module.exports = router;
