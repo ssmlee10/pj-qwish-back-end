@@ -4,9 +4,12 @@ const router = express.Router();
 
 router.post('/', async (req, res) => {
   try {
-    console.log(req.body);
-    const createdItem = await Item.create(req.body);
-    res.status(201).json(createdItem);
+    const preExistingItem = await Item.findOne({ product_id: req.body.product_id });
+    if (preExistingItem) { return res.status(201).json(preExistingItem) }
+    else {
+      const createdItem = await Item.create(req.body);
+      res.status(201).json(createdItem);
+    };
   } catch (err) {
     res.status(500).json({ err: err.message });
   };
