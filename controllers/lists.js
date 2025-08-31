@@ -2,12 +2,12 @@ const express = require("express");
 const verifyToken = require("../middleware/verify-token.js");
 const router = express.Router();
 const List = require("../models/list.js");
+const Item = require('../models/item.js');
 
 router.get("/", verifyToken, async (req, res) => {
   try {
     //only yours lists, without ones shared with you
     const allLists = await List.find({ author: req.user._id });
-    // const allLists = await List.find();
     return res.status(200).json(allLists);
   } catch (e) {
     console.error(e);
@@ -16,10 +16,8 @@ router.get("/", verifyToken, async (req, res) => {
 });
 
 router.post("/", verifyToken, async (req, res) => {
-  // console.log(req.user);
   try {
     req.body.author = req.user._id;
-    // console.log("req.body in POST /lists:", req.body);
 
     const newList = await List.create(req.body);
     return res.status(201).json(newList);
@@ -43,9 +41,8 @@ router.get("/shared", verifyToken, async (req, res) => {
 router.get("/:listId", verifyToken, async (req, res) => {
   try {
     const { listId } = req.params;
-    if (!listId) {
-      return res.sendStatus(423);
-    }
+    const list = await List.findById(listId);
+    /* Ask James if he can explain this commented section:
     const list = await List.findOne({
       _id: listId,
       $or: [
@@ -54,9 +51,21 @@ router.get("/:listId", verifyToken, async (req, res) => {
         { sharedWith: req.user._id }, // works even though it's an array
       ],
     });
+    */
     if (!list) {
       return res.sendStatus(404);
-    }
+    };
+
+    // Add full items to the list
+    const itemIds = list.items.map(el => el._id);
+    const items = await Item.find({ _id: itemIds });
+
+    for (let [idx, itm] of list.items.entries()) {
+      Object.assign(itm, items[idx]);
+    };
+
+    // console.log('BACKEND/list:', list);
+
     return res.status(200).json(list);
   } catch (e) {
     console.error(e);
@@ -133,16 +142,21 @@ router.delete("/:listId/:itemId", verifyToken, async (req, res) => {
   }
 });
 
-router.post("/:listId/newItem", verifyToken, async (req, res) => {
+router.post("/:listId/items/new", verifyToken, async (req, res) => {
   try {
-    const list = await List.findById(req.params.listId);
+    // const list = await List.findById(req.params.listId);
 
-    if (!list) {
-      return res.sendStatus(404);
-    }
+    // if (!list) {
+    //   return res.sendStatus(404);
+    // }
 
-    list.items.push(req.body);
-    await list.save();
+    // list.items.push(req.body);
+    // await list.save();
+
+    const list = await List.findByIdAndUpdate(req.params.listId,
+      { $push: { items: { _id: req.body._id, quantity: req.body.quantity } }, },
+      { new: true }
+    );
 
     return res.status(201).json(list);
   } catch (e) {
